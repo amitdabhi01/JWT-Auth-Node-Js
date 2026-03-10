@@ -3,12 +3,15 @@ import dotenv from "dotenv";
 
 import HttpsError from "./middleware/HttpError.js";
 import connectDB from "./config/db.js";
+import router from "./routes/userRoutes.js";
 
 dotenv.config({ path: "./.env" });
 
 const app = express();
 
 app.use(express.json());
+
+app.use("/user", router);
 
 app.get("/", (req, res) => {
   res.status(200).json("Hello From Server");
@@ -31,7 +34,7 @@ app.use((error, req, res, next) => {
     .json({ message: error.message || "internal server error" });
 });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {

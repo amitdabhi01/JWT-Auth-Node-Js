@@ -18,4 +18,18 @@ const addUser = async (req, res, next) => {
   }
 };
 
-export default { addUser };
+const login = async () => {
+  try {
+    const user = await user.findByCredentials(email, password);
+
+    if (!user) {
+      next(new HttpsError("Enable To Login"));
+    }
+
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    next(new HttpsError(error.message));
+  }
+};
+
+export default { addUser, login };

@@ -18,9 +18,11 @@ const addUser = async (req, res, next) => {
   }
 };
 
-const login = async () => {
+const login = async (req, res, next) => {
   try {
-    const user = await user.findByCredentials(email, password);
+    const { email, password } = req.body;
+    
+    const user = await User.findByCredentials(email, password);
 
     if (!user) {
       next(new HttpsError("Enable To Login"));

@@ -12,7 +12,9 @@ const addUser = async (req, res, next) => {
       password,
     });
 
-    res.status(201).json({ success: true, user });
+    const token = await user.generateAuthToken();
+
+    res.status(201).json({ success: true, user, token });
   } catch (error) {
     next(new HttpsError(error.message));
   }
@@ -21,17 +23,29 @@ const addUser = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    
+
     const user = await User.findByCredentials(email, password);
 
     if (!user) {
       next(new HttpsError("Enable To Login"));
     }
 
-    res.status(200).json({ success: true, user });
+    const token = await user.generateAuthToken();
+
+    res.status(200).json({ success: true, user, token });
   } catch (error) {
     next(new HttpsError(error.message));
   }
 };
 
-export default { addUser, login };
+const getAllUser = async (req, res, next) => {
+  const users = await User.find({});
+
+  if (users.length === 0) {
+    next(new HttpsError("User not found"));
+  }
+
+  res.status(200).json({ success: true, users });
+};
+
+export default { addUser, login, getAllUser };

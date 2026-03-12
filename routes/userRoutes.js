@@ -8,4 +8,6 @@ router.post("/add", userController.addUser);
 
 router.post("/login", userController.login);
 
+router.get("/allUsers", userController.getAllUser);
+
 export default router;

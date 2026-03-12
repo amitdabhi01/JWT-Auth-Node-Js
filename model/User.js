@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 
 import bcrypt from "bcrypt";
 
+import jwt from "jsonwebtoken";
+import { use } from "react";
+
 const userSchema = mongoose.Schema({
   name: {
     type: String,
@@ -28,6 +31,14 @@ const userSchema = mongoose.Schema({
         throw new Error("password can't contain password word as a password");
       }
     },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
   },
 });
 
@@ -53,6 +64,27 @@ userSchema.statics.findByCredentials = async function (email, password) {
     }
 
     return user;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+userSchema.methods.generateAuthToken = async function () {
+  try {
+    const user = this;
+
+    const token = jwt.sign(
+      { _id: user._id.toString() },
+      process.env.JWT_SECRET,
+    );
+
+    if (!token) {
+      throw new Error("failed to generate auth token");
+    }
+
+    user.tokens = user.tokens.concat({ token });
+
+    await user.save();
   } catch (error) {
     throw new Error(error.message);
   }

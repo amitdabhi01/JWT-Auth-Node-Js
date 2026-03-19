@@ -27,7 +27,7 @@ const login = async (req, res, next) => {
     const user = await User.findByCredentials(email, password);
 
     if (!user) {
-      next(new HttpsError("Enable To Login"));
+      next(new HttpsError("Unable To Login"));
     }
 
     const token = await user.generateAuthToken();
@@ -39,13 +39,31 @@ const login = async (req, res, next) => {
 };
 
 const getAllUser = async (req, res, next) => {
-  const users = await User.find({});
+  try {
+    const users = await User.find({});
 
-  if (users.length === 0) {
-    next(new HttpsError("User not found"));
+    if (users.length === 0) {
+      next(new HttpsError("User not found"));
+    }
+
+    res.status(200).json({ success: true, users });
+  } catch (error) {
+    next(new HttpsError(error.message, 500));
   }
-
-  res.status(200).json({ success: true, users });
 };
 
-export default { addUser, login, getAllUser };
+const authLogin = async (req, res, next) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      return next(new HttpsError("Unable to login"));
+    }
+
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    next(new HttpsError(error.message, 500));
+  }
+};
+
+export default { addUser, login, getAllUser, authLogin };

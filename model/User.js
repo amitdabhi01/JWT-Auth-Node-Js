@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
 import jwt from "jsonwebtoken";
-import { use } from "react";
 
 const userSchema = mongoose.Schema({
   name: {
@@ -31,15 +30,15 @@ const userSchema = mongoose.Schema({
         throw new Error("password can't contain password word as a password");
       }
     },
-    tokens: [
-      {
-        token: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
 
 userSchema.pre("save", async function () {

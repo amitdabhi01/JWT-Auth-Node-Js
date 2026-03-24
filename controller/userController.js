@@ -78,4 +78,16 @@ const logOut = async (req, res, next) => {
   }
 };
 
-export default { addUser, login, getAllUser, authLogin, logOut };
+const logOutAll = async (req, res, next) => {
+  try {
+    req.user.tokens = [];
+
+    req.user.save();
+
+    res.status(200).json({ message: "logout from all device" });
+  } catch (error) {
+    next(new HttpsError(error.message, 500));
+  }
+};
+
+export default { addUser, login, getAllUser, authLogin, logOut, logOutAll };

@@ -41,7 +41,7 @@ const startServer = async () => {
     await connectDB();
 
     app.listen(PORT, () => {
-      console.log(`server listing on port${PORT}`);
+      console.log(`server listing on port ${PORT}`);
     });
   } catch (error) {
     console.log(error.message);

@@ -36,7 +36,7 @@ const auth = async function (req, res, next) {
 
     next();
   } catch (error) {
-    next(new HttpsError("please authenticate", 401))
+    next(new HttpsError("please authenticate", 401));
   }
 };
 

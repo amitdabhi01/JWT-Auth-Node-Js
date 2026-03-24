@@ -66,4 +66,16 @@ const authLogin = async (req, res, next) => {
   }
 };
 
-export default { addUser, login, getAllUser, authLogin };
+const logOut = async (req, res, next) => {
+  try {
+    req.user.tokens = req.user.tokens.filter((t) => t.token != req.token);
+
+    req.user.save();
+
+    res.status(200).json({ message: "user log out successfully" });
+  } catch (error) {
+    next(new HttpsError(error.message, 500));
+  }
+};
+
+export default { addUser, login, getAllUser, authLogin, logOut };
